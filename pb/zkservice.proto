@@ -1,0 +1,31 @@
+syntax = "proto3";  //语法声明
+
+option go_package="./;pb";
+
+package pb; //包名
+
+// ZkService 微服务
+service ZkService {
+  rpc Get (Path) returns (Message) {} // 从路径获取数据
+  rpc Set (PathAndData) returns (Message) {} // 向路径存放数据
+}
+
+// Path Get方法请求数据格式
+message Path {
+  string path = 1; // 路径
+}
+
+
+// PathAndName Set方法请求数据格式
+message PathAndData {
+  string path = 1; // 路径
+  string data = 2; // 数据
+}
+
+
+// Message 响应数据格式
+message Message {
+  string data = 1; // 数据
+  string err = 2;  // 错误消息
+}
+
