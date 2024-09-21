@@ -7,7 +7,7 @@ import (
 	"github.com/go-ping/ping"
 )
 
-func GetLatency() map[string]string {
+func GetLatency() (map[string]string, error) {
 	LatencyMap := make(map[string]string)
 	// 需要改为所有需要测试节点的IP地址
 	targetIP := []string{"10.129.32.84", "10.129.13.55", "10.129.173.253", "10.129.184.238"}
@@ -16,7 +16,7 @@ func GetLatency() map[string]string {
 		pinger, err := ping.NewPinger(ip)
 		if err != nil {
 			fmt.Printf("无法创建Pinger: %v\n", err)
-			return nil
+			return LatencyMap, err
 		}
 
 		// 设置为ipv4
@@ -28,10 +28,11 @@ func GetLatency() map[string]string {
 		err = pinger.Run()
 		if err != nil {
 			fmt.Printf("Ping失败: %v\n", err)
+			return LatencyMap, err
 		} else {
 			stats := pinger.Statistics()
 			LatencyMap["/latency/node1-node"+strconv.Itoa(index+1)] = stats.AvgRtt.String()
 		}
 	}
-	return LatencyMap
+	return LatencyMap, nil
 }
